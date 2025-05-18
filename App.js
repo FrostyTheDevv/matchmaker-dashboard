@@ -12,20 +12,21 @@ import ProfilesPage from './pages/ProfilesPage';
 import QueuePage    from './pages/QueuePage';
 import SettingsPage from './pages/SettingsPage';
 import { theme }    from './theme';
-import './index.css';  // your global styles (optional)
+import './index.css';
 
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <Router>
+      {/* basename must match the sub-path on GitHub Pages */}
+      <Router basename="/matchmaker-dashboard">
         <Flex minH="100vh">
           <Sidebar />
           <Box flex="1" p={6}>
             <Routes>
-              <Route path="/"        element={<ProfilesPage />} />
-              <Route path="/queue"   element={<QueuePage />} />
+              <Route path="/"         element={<ProfilesPage />} />
+              <Route path="/queue"    element={<QueuePage />} />
               <Route path="/settings" element={<SettingsPage />} />
-              {/* Redirect any unknown path back to home */}
+              {/* Redirect all unknown URLs back to home */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Box>
