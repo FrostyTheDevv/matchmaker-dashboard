@@ -1,0 +1,35 @@
+# .github/workflows/deploy-docs.yml
+name: Build & Publish to /docs
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true   # so we can push back to main
+      - uses: actions/setup-node@v3
+        with: { node-version: '18' }
+      - run: npm ci
+      - run: npm run build
+
+      # Copy build/ to docs/
+      - name: Update docs folder
+        run: |
+          rm -rf docs
+          mkdir docs
+          cp -r build/* docs/
+
+      # Commit & push docs/
+      - name: Commit docs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git commit -m "ci: publish updated docs" || echo "No changes to commit"
+          git push origin main
+
